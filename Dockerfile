@@ -1,9 +1,16 @@
-FROM debian
+FROM golang:1.16-alpine AS builder
+WORKDIR /usr/src/app
 
-RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates
-
+# Copy project and build
+COPY . .
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -ldflags '-s' -v
 
-COPY ./ecr-token-refresh /ecr-token-refresh
 
-ENTRYPOINT /ecr-token-refresh
+# Multi stage build which reduces image size
+FROM alpine:3.13
+
+RUN apk update && apk add ca-certificates && rm -rf /var/cache/apk/*
+COPY --from=builder /usr/src/app/ecr-token-refresh .
+
+CMD ["./ecr-token-refresh"]
+
