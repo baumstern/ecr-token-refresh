@@ -17,6 +17,7 @@ used to `imagePullSecrets`
 
 
 
+Kubernetes version `v1.18`
 
 IAM permission:
 
