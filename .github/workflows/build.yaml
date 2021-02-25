@@ -1,0 +1,33 @@
+name: build
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+
+  check:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Check lint
+        uses: golangci/golangci-lint-action@v2
+        with:
+          version: v1.37
+      - name: Check gofmt
+        uses: Jerome1337/gofmt-action@v1.0.4
+      - name: Check goimports
+        uses: Jerome1337/goimports-action@v1.0.3
+
+  push:
+    needs: check
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build container image
+        run: |
+          docker build -t ghcr.io/gurrpi/ecr-token-refresh:latest .
+      - name: Push container image
+        run: |
+          echo ${{ secrets.CR_PAT }} | docker login ghcr.io -u gurrpi --password-stdin
+          docker push ghcr.io/gurrpi/ecr-token-refresh:latest
