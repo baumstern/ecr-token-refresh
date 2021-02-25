@@ -2,8 +2,8 @@ name: build
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - v*
 jobs:
 
   check:
@@ -15,10 +15,15 @@ jobs:
       - name: Check goimports
         uses: Jerome1337/goimports-action@v1.0.3
 
-  build:
+  push:
+    needs: check
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
       - name: Build container image
         run: |
-          docker build -t ghcr.io/gurrpi/ecr-token-refresh:latest .
+          docker build -t ghcr.io/gurrpi/ecr-token-refresh:${GITHUB_REF#refs/*/} .
+      - name: Push container image
+        run: |
+          echo ${{ secrets.CR_PAT }} | docker login ghcr.io -u gurrpi --password-stdin
+          docker push ghcr.io/gurrpi/ecr-token-refresh:${GITHUB_REF#refs/*/}
