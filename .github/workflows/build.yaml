@@ -10,10 +10,6 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - name: Check lint
-        uses: golangci/golangci-lint-action@v2
-        with:
-          version: v1.37
       - name: Check gofmt
         uses: Jerome1337/gofmt-action@v1.0.4
       - name: Check goimports
