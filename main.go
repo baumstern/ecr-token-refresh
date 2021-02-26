@@ -63,11 +63,11 @@ func main() {
 	}
 
 	// TODO: Delete secret only when a secret exists in cluster
-	err = clientset.CoreV1().Secrets(v1.NamespaceDefault).Delete(context.TODO(), secretName, metav1.DeleteOptions{})
+	err = clientset.CoreV1().Secrets(namespace).Delete(context.TODO(), secretName, metav1.DeleteOptions{})
 	if err != nil {
-		fmt.Printf("Failed to delete secret '%s': %s", secretName, err.Error())
+		fmt.Printf("Failed to delete secret '%s': %s\n", secretName, err.Error())
 	}
-	result, err := clientset.CoreV1().Secrets(v1.NamespaceDefault).Create(context.TODO(), secret, metav1.CreateOptions{})
+	result, err := clientset.CoreV1().Secrets(namespace).Create(context.TODO(), secret, metav1.CreateOptions{})
 	if err != nil {
 		panic("Failed to create secret: " + err.Error())
 	}

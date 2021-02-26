@@ -25,3 +25,9 @@ IAM permission:
 ## Usage
 
  cronjob
+ 
+ 
+## Alternatives
+
+* https://github.com/anaganisk/ecr-kube-helper
+* https://github.com/skuid/ecr-token-refresh
