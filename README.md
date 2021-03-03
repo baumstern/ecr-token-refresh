@@ -82,7 +82,7 @@ kind: CronJob
 metadata:
   name: cronjob-ecr-token-refresh
 spec:
-  schedule: "* */6 * * *"
+  schedule: "0 */6 * * *"
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 5
   jobTemplate:
