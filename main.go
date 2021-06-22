@@ -65,13 +65,13 @@ func main() {
 	// TODO: Delete secret only when a secret exists in cluster
 	err = clientset.CoreV1().Secrets(namespace).Delete(context.TODO(), secretName, metav1.DeleteOptions{})
 	if err != nil {
-		fmt.Printf("Failed to delete secret '%s': %s\n", secretName, err.Error())
+		fmt.Printf("Failed to delete the secret '%s': %s\n", secretName, err.Error())
 	}
 	result, err := clientset.CoreV1().Secrets(namespace).Create(context.TODO(), secret, metav1.CreateOptions{})
 	if err != nil {
-		panic("Failed to create secret: " + err.Error())
+		panic("Failed to create the secret: " + err.Error())
 	}
-	fmt.Printf("Created secret %q in namespace %q.\n", result.GetObjectMeta().GetName(), result.GetObjectMeta().GetNamespace())
+	fmt.Printf("Succesfully created the secret %q in namespace %q.\n", result.GetObjectMeta().GetName(), result.GetObjectMeta().GetNamespace())
 }
 
 // generateDockerconfigjson generates json for data field of `kubernetes.io/dockerconfigjson` type secret
@@ -115,7 +115,7 @@ func getECRToken() ([]types.AuthorizationData, error) {
 	if err := checkEnv("AWS_SECRET_ACCESS_KEY"); err != nil {
 		return nil, err
 	}
-	fmt.Println("Target region: ", os.Getenv("AWS_REGION"))
+	fmt.Println("Target region of ECR token: ", os.Getenv("AWS_REGION"))
 
 	// Assumes AWS token could be retrieved from an environment variable
 	cfg, err := config.LoadDefaultConfig(context.TODO())
@@ -130,8 +130,9 @@ func getECRToken() ([]types.AuthorizationData, error) {
 	if response.AuthorizationData == nil {
 		return nil, errors.New("there is no ECR account to retrieve token")
 	}
-	fmt.Println("Retrieved auth count: ", len(response.AuthorizationData))
-	fmt.Println("Retrieved auth would expired at ", response.AuthorizationData[0].ExpiresAt)
+	fmt.Println("Describing retrieved auth...")
+	fmt.Println("Auth count: ", len(response.AuthorizationData))
+	fmt.Println("Auth would expired at ", response.AuthorizationData[0].ExpiresAt)
 	for _, auth := range response.AuthorizationData {
 		fmt.Println("Registry endpoint: ", *auth.ProxyEndpoint)
 	}
@@ -141,7 +142,7 @@ func getECRToken() ([]types.AuthorizationData, error) {
 // checkEnv checks if value of environment variable didn't exist for given key
 func checkEnv(key string) error {
 	if _, exist := os.LookupEnv(key); !exist {
-		return errors.New("Couldn't retrieve environment variable: " + key)
+		return errors.New("Couldn't get environment variable: " + key)
 	}
 	return nil
 }
